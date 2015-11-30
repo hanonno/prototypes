@@ -7,12 +7,20 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=768,initial-scale=1.0,user-scalable=no">
     <script src="./scripts/library/move/move-0.4.5.js"></script>
+    <script src="./scripts/library/jquery/jquery.js"></script>
     <script src="./scripts/library/uilayer/uilayer.js"></script>
     <script src="./scripts/library/dribbble/coach.js"></script>
 
     <script src="./scripts/library/scroller/Raf.js"></script>
     <script src="./scripts/library/scroller/Animate.js"></script>    
     <script src="./scripts/library/scroller/Scroller.js"></script>
+    <script src="./scripts/library/dribbble/jribbble.js"></script>    
+    
+    <script>
+        $.jribbble.setToken('aa07a830bf35c2b339c15420e11b38216ebd0fdb29f7d5acc77ef479b5e2df28');
+    </script>
+
+    
     <script type="text/move">
     
         import UILayer
@@ -138,25 +146,15 @@
         }
 
         Gallery = UICarousel(100, 100, 1024, 500)
-        
-        Coach.shots('popular', 0, 15, function (popular) {
-            
-            popular.shots.forEach ^(shot, index, shots) {
-                            
-                page = Gallery.addPage{}    
-                page.element.style.background = 'black url(' + shot.image_url + ') no-repeat scroll top left';
-                
-/*
-                image = <img src="{shot.image_url}" />                  
-                page.element.appendChild(image)
-*/
-            
-            }
-            
-        });
-        
-        document.body.appendChild(Gallery.container.element)        
 
+        $.jribbble.shots('teams').then(function(shots) {
+            shots.forEach ^(shot, index, shots) {
+                page = Gallery.addPage{}    
+                page.element.style.background = 'black url(' + shot.images.normal + ') no-repeat scroll top left';
+            }
+        });
+
+        document.body.appendChild(Gallery.container.element)
 
     </script>
     <style>
@@ -185,6 +183,7 @@
   </head>
     <body>
     </body>
+<!--
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -195,4 +194,5 @@
   ga('send', 'pageview');
 
 </script>    
+-->
 </html>
