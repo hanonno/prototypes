@@ -14,14 +14,21 @@
 
     <script src="./scripts/library/mustache/mustache.js"></script>
 
-    <script src="http://movelang.org/move-0.4.4.js"></script>
+    <script src="./scripts/library/move/move-0.4.5.js"></script>
     <script src="./scripts/library/uilayer/uilayer.js"></script>
 
     <script src="./scripts/library/dribbble/coach.js"></script>
+    <script src="./scripts/library/dribbble/jribbble.js"></script>    
+
 
     <script src="./scripts/library/scroller/Raf.js"></script>
     <script src="./scripts/library/scroller/Animate.js"></script>    
     <script src="./scripts/library/scroller/Scroller.js"></script>
+    
+    <script>
+        $.jribbble.setToken('aa07a830bf35c2b339c15420e11b38216ebd0fdb29f7d5acc77ef479b5e2df28');
+    </script>
+    
     <script type="text/move">
     
         import UILayer
@@ -122,17 +129,15 @@
                     <img src='{{image_url}}' />
                     <header>{{title}}</header>
                 </div>
-            </article>"
+            </article>"            
         
-        Coach.shots('popular', 0, 9, function (popular) {
-            
-            popular.shots.forEach ^(shot, index, shots) {
+        $.jribbble.shots('teams').then(function(shots) {            
+            shots.forEach ^(shot, index, shots) {
                 page = Gallery.addPage index
                                 
-                $(page.element).append(Mustache.render(template, { 'title': shot.title, 'image_url': shot.image_url, 'likes_count': shot.likes_count, 'comments_count': shot.comments_count }))
+                $(page.element).append(Mustache.render(template, { 'title': shot.title, 'image_url': shot.images.normal, 'likes_count': shot.likes_count, 'comments_count': shot.comments_count }))
                 
             }
-            
         });
         
         $('#page').append(Gallery.container.element)   
