@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=768,initial-scale=1.0,user-scalable=no">
+    <script src="http://movelang.org/move-0.4.4.js"></script>
+    <script src="./scripts/library/uilayer/uilayer.js"></script>
+    <script src="./scripts/library/dribbble/coach.js"></script>
+
+    <script src="./scripts/library/scroller/Raf.js"></script>
+    <script src="./scripts/library/scroller/Animate.js"></script>    
+    <script src="./scripts/library/scroller/Scroller.js"></script>
+    <script type="text/move">
+    
+        import UILayer
+        
+        UIParralax = class {   
+            constructor: ^(x, y, width, height) {
+            
+                @x = x;
+                @y = y;
+                @width = width
+                @height = height
+                
+                self = this
+
+                @container = UILayer { x: x, y: y, width: width, height: height, perspective: 1000, masksToBounds: true }
+
+                @scroller = new Scroller(^(left, top, zoom) {
+                    self.recalculateLayout(left)                    
+                });
+
+                @scroller.setDimensions(0, 0, 3000, 500)
+                
+                @container.on 'mouseup', ^(event) {
+                    self.scroller.doTouchEnd(event.timeStamp)
+                    
+                    event.preventDefault();
+                }                
+
+                @container.on 'mouseout', ^(event) {
+                    self.scroller.doTouchEnd(event.timeStamp)
+                    
+                    event.preventDefault();
+                }
+            },
+            
+            addText: ^(text) {
+                
+            }
+        }
+
+        Gallery = UIParralax(100, 100, 1024, 500)
+                
+        document.body.appendChild(Gallery.container.element)        
+
+
+    </script>
+    <style>
+      * { margin:0; padding:0; border:none; }
+      
+        body {
+            background-color: #1a1a1a;
+        }
+      
+      .layer {
+/*             -webkit-box-reflect:below 1px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.8, transparent), to(white)); */
+/*             background: black url(http://placehold.it/400x300) repeat scroll top left; */
+      }
+      
+        .blur img {
+/*             -webkit-filter: blur(3px);  */
+        }
+                                 
+    </style>
+  </head>
+    <body>
+    
+    
+    
+    </body>
+</html>

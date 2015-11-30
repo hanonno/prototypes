@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=320,initial-scale=1.0,user-scalable=no">
+    <style type="text/css">
+    
+        body {
+            font-family: "Helvetica Neue";
+            font-size: 12px;
+            
+            padding: 0;
+            margin: 0;
+        }
+		
+		.toolbar {
+		  background-color: red;
+		  
+		  display: -webkit-box;
+		  
+		  padding: 3px;
+		  
+		  background-image: -webkit-gradient(linear,left top, left bottom,from(#efefef),to(#d9d9d9));
+		  
+		  border-bottom: 1px solid #a2a2a2;
+		  
+		  -webkit-border-top-left-radius: 4px;
+		  -webkit-border-top-right-radius: 4px;		  
+        }
+		
+		.fill-horizontal {
+		  -webkit-box-flex: 1;
+		}
+		
+		.control {
+
+            margin: 3px;
+            
+            -webkit-border-radius: 4px;
+
+            border: 1px solid #a2a2a2;
+            
+            -webkit-box-shadow: 0px 1px 0px #fff, inset 0px 1px 0px #fff;
+		}
+		
+		.button {
+		
+		  color: #575757;
+		
+		  font-weight: bold;
+		  
+		  text-align: center;
+		  
+          text-shadow: 0px 1px 0px #FFF;
+		  background-color: blue;
+		  padding: 9px 12px 9px 12px;
+		  
+  		  background-image: -webkit-gradient(linear,left top, left bottom,from(#efefef),to(#d9d9d9));
+		}
+		
+		  .button span {
+		      padding: 3px;
+		  }
+		
+		.icon {
+		  width: 17px;
+		  height: 17px;
+		  display: inline-block;
+		  padding: 0;
+		  margin: 0;
+		}
+		
+		.icon-photo {
+            background-image: url(./images/photo-icon.png);
+		}
+
+		.icon-location {
+            background-image: url(./images/location-icon.png);
+		}
+		
+		.input {
+		  background-color: #fff;
+          
+		  padding: 7px 12px 5px 8px;
+		  
+		  color: #aaa;
+		  
+		}
+		
+		.content {
+            padding: 20px;
+
+            height: 100%;
+
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+		}
+    
+    
+    </style>
+
+<!--
+    <link rel="stylesheet/less" type="text/css" href="./less/desktop.less">
+    <script src="./scripts/library/less/less-1.2.1.min.js"></script>
+-->
+
+    <script src="./scripts/library/jquery/jquery.js"></script>
+
+    <script src="./scripts/library/mustache/mustache.js"></script>
+
+    <script src="./scripts/library/spin/spin.js"></script>
+
+    <script src="./scripts/library/move/move-0.4.5.js"></script>
+    <script src="./scripts/library/uilayer/uilayer.js"></script>
+
+    <script type="text/move">
+    
+        import UILayer
+        
+        UIPage = class UILayer, {
+            constructor: ^() {
+
+                UILayer.prototype.constructor.apply this, arguments
+
+                stack = arguments[0].stack
+                
+                @toolbar = UILayer { x: 0, y: 0, width: 320, height: 48, className: 'toolbar' }
+                
+                @nextButton = UILayer { x: 3, y: 3, width: 154, height: 42 }
+                
+                $(@nextButton.element).append '<div class="control button">Next</div>'
+                @nextButton.on 'touchend', ^(event) {
+                    stack.push()
+                }
+                
+                @toolbar.addSublayer @nextButton
+                
+                @prevButton = UILayer { x: 163, y: 3, width: 154, height: 42 }
+                $(@prevButton.element).append '<div class="control button">Prev</div>'
+                @prevButton.on 'touchend', ^(event) {
+                    stack.pop()
+                }
+                
+                @toolbar.addSublayer @prevButton
+                
+                this.addSublayer @toolbar
+                
+                @spinnerLayer = UILayer { x: 160, y: 200, width: 80, height: 80, className: 'spinner' }
+                
+                options = {
+                  lines: 12,
+                  length: 7,
+                  width: 4,
+                  radius: 10,
+                  color: '#000',
+                  speed: 1,
+                  trail: 60,
+                  shadow: false,
+                  hwaccel: true
+                };
+
+
+                @spinner = new Spinner(options).spin(@spinnerLayer.element);
+                @spinner.stop()
+                
+                @loaded = false
+                
+                @contentLayer = UILayer { x: 0, y: 48, width: 320, height: 400, backgroundColor: 'white' }
+                
+                this.addSublayer @contentLayer
+
+                this.addSublayer @spinnerLayer
+            }
+        }
+        
+        UIStack = class {
+        
+            constructor: ^(x, y, width, height) {
+                @x = x
+                @y = y
+                @width = width
+                @height = height
+                
+                self = this
+                
+                @container = UILayer { width: width, height: height, animated: true, perspective: 1000, masksToBounds: true }  
+                
+                this.createPage()
+                
+                return self
+            },
+            
+            createPage: ^() {
+                page = UIPage { x: 320, y: 0, width: 320, height: 480, animated: true, className: 'page', stack: this }
+                
+                page.animationDuration = 200
+                
+                @container.addSublayer page      
+            },
+            
+            push: ^() {
+                layers = @container.sublayers
+                
+                page = layers[layers.length - 1]
+                
+                page.frame.x = 0                
+                
+                layers.forEach(^(layer, index, layers) {
+                    if(layer != page) {
+                        # layer.frame.z -= 100
+                        layer.scale -= 0.1
+                        # layer.opacity = 0.5
+                    }
+                    
+                    layer.removeEventListener 'webkitTransitionEnd'
+                })
+                
+                page.on 'webkitTransitionEnd', ^(event) {
+                
+                    if(page.loaded == false) {
+                 
+                    page.spinner.spin()
+                
+                    $.ajax({
+                        url: "http://light.hyveshq/~hanonno/ui/test.json",
+                        success: function(data) {
+                            $(page.element).append data
+                        },
+                        error: function(error) {
+                            $(page.contentLayer.element).append '<div class="content">' + error.responseText + '</div>'
+                            page.spinner.stop()
+                            
+                            page.loaded = true
+                        }
+                    });
+                    
+                    }
+                }
+                
+                this.createPage()
+            },
+            
+            animate: ^(page) {
+                page.frame.x = 0
+            },
+            
+            pop: ^() {
+                layers = @container.sublayers
+                                
+                lastPage = layers[layers.length - 1]
+                currentPage = layers[layers.length - 3]
+                page = layers[layers.length - 2]
+                
+                page.frame.x = 320                
+                
+                layers.forEach(^(layer, index, layers) {
+                    if(layer != page) {
+                        # layer.frame.z += 100
+                        layer.scale += 0.1                   
+                    }                    
+                })
+                
+                currentPage.opacity = 1.0
+                
+                lastPage.removeFromSuperlayer()
+            }            
+        }
+        
+        Screen = UILayer { anchor:'t r b l', element:document.getElementById('container') }
+        
+        # Screen.rotation.x = 40
+        # Screen.rotation.y = 40        
+        
+        Stack = UIStack(0, 0, 320, 480);
+        
+        Stack.push()
+        
+        Screen.addSublayer Stack.container
+        
+        pushButton = UILayer { x: 10, y: 10, width: 100, height: 42, element: document.getElementById('pushButton') }
+        
+        pushButton.on 'click', ^(event) {
+            page = Stack.push()
+        }
+        
+        popButton = UILayer { x: 120, y: 10, width: 100, height: 42, element: document.getElementById('popButton') }
+        
+        popButton.on 'click', ^(event) {
+            Stack.pop() 
+        }
+
+
+
+    </script>
+    <style type="text/css">
+    
+        body {
+            background-color: gray;
+        }
+            
+        #container {
+            width: 320px;
+            height: 480px;
+            
+            background-color: black;
+        }
+        
+        .page {
+            padding: 0 20px;
+        }
+    
+    </style>
+  </head>
+    <body>    
+        <div id="container"></div>
+    
+    </body>
+</html>

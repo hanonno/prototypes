@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=768,initial-scale=1.0,user-scalable=no">
+    <script src="http://movelang.org/move-0.4.4.js"></script>
+    <script>document.write('<'+'script src="scripts/library/uilayer/uilayer.js?'+(+new Date)+'"><'+'/script>');</script>
+
+
+
+    
+    
+
+<!--
+    <script src="./scripts/library/scroller/Raf.js"></script>
+    <script src="./scripts/library/scroller/Animate.js"></script>    
+    <script src="./scripts/library/scroller/Scroller.js"></script>
+-->
+
+    <script type="text/move">
+    
+    import UILayer
+    
+    UILayer.debug = true
+    
+    
+UIButton = class UILayer, {
+  constructor: ^{
+    UILayer.prototype.constructor.apply this, arguments
+
+            
+            @title = <span class="button"></span>
+                        
+            @title.innerHTML = 'hmm'
+            
+            @element.appendChild(@title)
+        }
+    
+    }
+    
+    screen = UILayer { x: 10, y: 20, width: 500, height: 500 }
+    
+    document.body.appendChild(screen.element)
+    
+    confirmButton = UIButton { title: "OK", x: 0, y: 0, width: 100, height: 100 }
+    
+    screen.addSublayer(confirmButton)
+    
+    cancelButton = UIButton { title: "Cancel", x: 100, y: 100, width: 100, height: 100 }
+    
+    screen.addSublayer(cancelButton)
+    
+    
+/*
+    ViewController = class {
+    
+        constructor: ^{
+            @layer = UILayer { x: 0, y: 0, width: 200, height: 200, animated: true }
+        }
+    
+    }
+    
+    NavigationController = class {
+    
+        constructor: ^{
+        
+            @layer = UILayer { x: 0, y: 0, width: 768, height: 600, animated: true }
+        
+        },
+        
+        pushController: ^(controller) {
+                    
+            @layer.addSublayer(controller.layer)
+            
+            controller.layer.frame.x = 0
+            
+            self = this
+            
+            after { delay: 100 } ^{
+                self.animatedController(controller)
+            }
+            
+        },
+        
+        popController: ^{
+        
+        },
+        
+        animatedController: ^(controller) {
+            controller.layer.animated = true
+            controller.layer.frame.x += 400
+        },
+        
+        element: ^{
+            return @container.element
+        }
+    
+    }
+    
+    Application = class {
+        
+        constructor: ^{
+
+            @screen = UILayer { x: 100, y: 100, width: 768, height: 1024, animated: true }
+            @navigationController = NavigationController {}
+            
+            @screen.addSublayer(@navigationController.layer)
+            
+            @menuViewController = ViewController {}
+            
+            self = this
+            
+            @screen.on 'touchstart', ^(event) {
+
+                self.showMenu()
+
+            }
+        
+        },
+        
+        showMenu: ^{
+        
+            @navigationController.pushController(@menuViewController)
+        
+        }
+    
+    }
+    
+    application = Application {}
+    
+    document.body.appendChild(application.screen.element)
+*/
+    
+    
+    
+    
+    
+    
+    
+    
+/*
+
+    
+    
+    navigationController = new NavigationController
+    
+    document.body.appendChild(navigationController.element)
+
+    
+    ButtonLayer = class UILayer, {
+        
+        constructor: ^{
+            UILayer.prototype.constructor.apply this, arguments
+            
+            title = <h1>test</h1>
+            
+            @element.appendChild title
+        }
+    
+    }
+    
+    button = ButtonLayer { x: 10, y: 10, width: 100, height: 100 }
+    
+    document.body.appendChild(button.element)
+*/
+
+    </script>
+  </head>
+  <body></body>
+</html>

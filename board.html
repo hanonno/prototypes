@@ -1,0 +1,164 @@
+<html>
+	<head>
+		<title></title>
+        <script src="./scripts/library/keymaster/keymaster.js"></script>
+        <script src="./scripts/library/zepto/zepto.js"></script>        
+		<script>
+		
+            function push() {
+            
+            
+            }
+		
+
+            $(document).ready(function(){ 
+
+                key("j", function() {
+
+                    var view = "<div class=view>" + $('#stack .view').size() + "</div>";
+
+<!--                     $('#stack').append("<div class=view>" + $('#stack .view').size() + "</div>"); -->
+        		 
+        		 
+                    $('#stack').append(view);
+        		 
+                });
+                
+                
+                key("k", function() {
+
+                    $('#stack .view').last().remove();
+                            
+                });
+
+
+                            
+            });
+		 
+		</script>
+		<style type="text/css">
+		
+		body {
+            background-color: #000000;
+		}
+		
+		.screen {
+		
+            width: 320px;
+            height: 480px;
+		
+            background-color: #ffffff;
+		
+            margin: 10px auto;
+            
+            position: relative;
+            
+            overflow: hidden;
+		
+		}
+		
+		.view {
+		
+            position: absolute;
+		
+            width: 320px;
+            height: 480px;
+            
+            background-color: hsl(108, 0%, 90%);
+            
+            -webkit-transition: all 0.2s ease-in-out;
+            		
+		}
+		
+/*
+		.view:nth-child(1) {
+		
+            -webkit-transform: scale3d(0.9, 0.9, 0);    
+            opacity: 0.5;
+		
+		}
+		
+		.view:nth-child(2) {
+		}
+		
+		
+		.view:nth-child(3) {
+            left: 100%;
+		}
+		
+		.view:nth-child(n + 4) {
+            display: none;
+		}
+*/
+
+
+        .view:nth-last-child(1) {
+            left: 100%;
+        }
+        
+        .view:nth-last-child(2) {
+        }
+        
+        .view:nth-last-child(3) {
+            -webkit-transform: scale3d(0.9, 0.9, 0);
+            opacity: 0.5;        
+        }
+        
+        .view:nth-last-child(n + 4) {
+            display:none;            
+        }
+
+
+/*
+		.view:nth-last-child(3) {
+		
+            -webkit-transform: scale3d(0.9, 0.9, 0);    
+            opacity: 0.5;
+		
+		}
+		
+		.view:nth-last-child(2) {kk
+		
+		}
+		
+		.view:nth-last-child(1) {
+            left: 100%;
+		}
+		
+		.view:nth-last-child(3+n) {
+            display: none;
+		}
+
+*/
+
+        #push, #pop {
+        
+            width: 150px;
+            
+        }
+
+        #push { float: right; }
+        #pop { float: left; }
+		
+		</style>
+	</head>
+	<body>
+	
+	<div class="screen">
+	
+        <div id="push">PUSH</div>
+        <div id="pop">POP</div>
+	
+    	<div id="stack" class="stack">
+    	   <div class="view">1</div>
+    	   <div class="view">2</div>
+<!--
+
+    	   <div class="view" style="background-color:blue">3</div>
+-->
+    	</div>
+	
+	</div>
+	
+	</body>
+</html>

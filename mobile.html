@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=768,initial-scale=1.0,user-scalable=no">
+    <script src="http://movelang.org/move-0.4.4.js"></script>
+    <script src="./scripts/library/uilayer/uilayer.js"></script>
+
+    <script src="./scripts/library/scroller/Raf.js"></script>
+    <script src="./scripts/library/scroller/Animate.js"></script>    
+    <script src="./scripts/library/scroller/Scroller.js"></script>
+    <script type="text/move">
+    
+        import UILayer
+                
+        screen = UILayer { x: 0, y: 0, width:320, height: 480, masksToBounds: false, tag: 'screen' }
+        
+        document.body.appendChild(screen.element)
+        
+        navigationBar = UILayer { x: 0, y: 20, width: 320, height: 42, tag: 'navigation' }
+        
+        menuView = UILayer { x: 0, y: 480, width: 320, height: 418, animated: true, tag: 'menu' }
+        
+        navigationBar.on 'touchend', ^{
+            if(menuView.frame.y == 62) {
+                menuView.frame.y = 480
+            } else {
+                menuView.frame.y = 62
+            }
+        }
+        
+        advertorialView = UILayer { x: 0, y: 62, width: 320, height: 38, animated: true, tag: 'advertorial' }
+        
+        advertorialView.animationDuration = 300
+        advertorialView.animationTimingFunction = 'ease-out'
+        
+        banner = <div class="title">Lipton</div>
+        
+        contentView = UILayer { x: 0, y: 38, width: 320, height: 388, animated: true, tag: 'content' }
+        contentView.opacity = 0.0
+        
+        contentView.element.appendChild(document.getElementById('form-content'))
+                
+        advertorialView.element.appendChild(banner)
+        advertorialView.addSublayer(contentView)
+        
+        advertorialView.on 'touchend', ^{
+            
+            if(advertorialView.frame.y == 62) {
+                advertorialView.frame.y = 0
+                advertorialView.frame.height = 420
+                contentView.opacity = 1.0                
+            } else {
+                advertorialView.frame.y = 62
+                advertorialView.frame.height = 38
+                contentView.opacity = 0.0
+            }
+        }
+        
+        screen.addSublayer(navigationBar)
+        screen.addSublayer(advertorialView)
+        screen.addSublayer(menuView)
+        
+
+    </script>
+    <style type="text/css">
+      * { margin:0; padding:0; border:none; font-family: "Helvetica Neue" }
+      
+        #screen {
+            background-color: teal;
+        }
+        
+        #navigation {
+            background-color: blue;
+        }
+        
+        #menu {
+            background-color: yellow;
+        }
+      
+        #advertorial {
+            background-color: #ceddf0;
+            
+            overflow: hidden;
+        }
+        
+        #advertorial div.title {
+            font-weight: bolder;
+            height: 29px;
+            padding: 9px 0 0 10px;
+        }
+        
+        #content {
+            background: white url(./images/mobile/background.png) repeat scroll top left;
+        }
+      
+        body {
+/*             background: black url(./images/library/uilayer/checker-pattern.png) repeat scroll top left; */
+            background-color: #1a1a1a;
+        }
+      
+      .layer {
+            background: black url(http://placehold.it/200x260) repeat scroll top left;
+/*             background: black url(http://placekitten.com/200/260) repeat scroll top left; */
+/*             background: black url(http://flickholdr.com/200/260) repeat scroll top left; */
+/*             background-color: rgba(1, 1, 1, 0.5); */
+/*             -webkit-border-radius: 4px; */
+/*             -webkit-box-shadow: 0px 0px 15px #000; */
+      }
+	   
+	   .form {
+            font-family: "Helvetica Neue";
+            font-size: 14px;
+            
+            width: 320px;
+            
+            padding: 6px;
+
+            position: absolute;   
+            
+            left: 0; bottom: 6px; right: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+	   }
+	   
+	       .form .input {
+	           color: #989898;
+	           background-color: #ffffff;
+	       
+	           font-weight: lighter;
+	       
+	           border: 1px solid #d4d4d4;
+	           -webkit-border-radius: 4px;
+	           padding: 8px;
+	           margin: 3px;
+	       }	           
+	       
+	           .form .input em {
+	               color: #1e1e1e;
+	           
+	               font-weight: bold;
+	               font-style: normal;
+	           }
+                                 
+    </style>
+  </head>
+  <body>
+  
+   <table id="form-content" class="form">
+       <tr>
+           <td colspan="2">
+	           <div class="input">Straat <em>Nieuwendijk</em></div>
+           </td>
+       </tr>
+       <tr>
+           <td>
+    	       <div class="input">Postcode <em>1012 MR</em></div>	           
+           </td>
+           <td>
+    	       <div class="input">Huisnummer <em>106</em></div>	           
+           </td>
+       </tr>
+       <tr>
+           <td colspan="2">
+	           <div class="input">Stad <em>Amsterdam</em></div>	
+           </td>
+       </tr>    	   
+   </table>
+
+  
+  </body>
+</html>

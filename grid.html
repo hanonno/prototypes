@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=768,initial-scale=1.0,user-scalable=no">
+
+    <link rel="stylesheet/less" type="text/css" href="./less/desktop.less">
+     <script src="./scripts/library/less/less-1.2.1.min.js"></script>
+
+    <script src="./scripts/library/jquery/jquery.js"></script>
+
+    <script src="./scripts/library/mustache/mustache.js"></script>
+
+    <script src="http://movelang.org/move-0.4.4.js"></script>
+    <script src="./scripts/library/uilayer/uilayer.js"></script>
+
+    <script src="./scripts/library/dribbble/coach.js"></script>
+
+    <script src="./scripts/library/scroller/Raf.js"></script>
+    <script src="./scripts/library/scroller/Animate.js"></script>    
+    <script src="./scripts/library/scroller/Scroller.js"></script>
+    <script type="text/move">
+    
+        import UILayer
+        
+        UIGrid = class {
+        
+            constructor: ^(x, y, width, height, numberOfColumns) {
+                @x = x
+                @y = y
+                @width = width
+                @height = height
+                @numberOfColumns = numberOfColumns
+                
+                self = this
+                
+                @container = UILayer { x: x, y: y, z: 20, width: width, height: height }  
+            },
+            
+            addPage: ^(index) {
+            
+                frame = this.frameAtIndex(index)
+            
+                page = UILayer { x: frame.x, y: frame.y, width: frame.width, height: frame.height, className: 'grid-item', animated: true, 'doubleSided': true }
+                        
+                page.animationDuration = 200
+                page.transformOrigin = [0, 0, 0]
+                
+                @container.addSublayer page
+
+                $(page.element).data('index', index)
+                $(page.element).data('frame', frame)
+
+                page.scale = 0.5
+                
+                page.on 'touchend', ^(event) {
+                
+                    activePage = UILayer.layerWithTag('activePage')
+                    
+                    page.zPosition = 1000
+                    page.frame.x = (620 / 2) - (400 / 2)
+                    page.frame.y = page.frame.y - (300 / 4)
+                    page.frame.z = 1
+                    page.scale = 1
+                    page.tag = 'activePage'
+                    $(page.element).addClass('active')                    
+                    
+                    page.rotation.y = 0
+                    
+                    if(activePage) {
+                        activePage.zPosition = 0
+                        
+                        activePage.frame = $(activePage.element).data('frame');
+                        activePage.frame.z = 0
+                        activePage.scaleBy(0.5, 0.5)                    
+                        activePage.rotation.y = 0
+                        activePage.tag = ''
+                        
+                        $(activePage.element).removeClass('active')
+                    } 
+                        
+                }
+                
+                return page   
+            },
+            
+            frameAtIndex: ^(index) {            
+                columnIndex = this.columnAtIndex(index)
+                rowIndex = this.rowAtIndex(index)
+                            
+                return {
+                    x: (columnIndex * 210),
+                    y: (rowIndex * 160),
+                    width: 200 * 2,
+                    height: 150 * 2
+                }
+            }, 
+            
+            columnAtIndex: ^(index) {
+                return index % this.numberOfColumns
+            },
+            
+            rowAtIndex: ^(index) {
+                return Math.floor(index / this.numberOfColumns)
+            }   
+        }
+
+        margin = (768 - 620) / 2
+
+        Gallery = UIGrid(margin, margin + 100, 620, 1000, 3)
+        
+        template = "
+            <article>
+                <p>
+                    <b>{{likes_count}}</b> Likes <br/><br /> 
+                    <b>{{comments_count}}</b> Comments
+                </p>
+                <div class='image'>
+                    <img src='{{image_url}}' />
+                    <header>{{title}}</header>
+                </div>
+            </article>"
+        
+        Coach.shots('popular', 0, 9, function (popular) {
+            
+            popular.shots.forEach ^(shot, index, shots) {
+                page = Gallery.addPage index
+                                
+                $(page.element).append(Mustache.render(template, { 'title': shot.title, 'image_url': shot.image_url, 'likes_count': shot.likes_count, 'comments_count': shot.comments_count }))
+                
+            }
+            
+        });
+        
+        $('#page').append(Gallery.container.element)   
+
+
+    </script>
+  </head>
+    <body>
+        
+        <div id="page">
+        </div>
+        
+        <div id="app-bg">
+            <header class="app-nav">
+
+            </header>
+            <footer id="app-footer">
+
+            </footer>
+        </div>
+    </body>
+</html>
